@@ -1,4 +1,10 @@
 import { useState } from "react";
+import BuilderLanding from "./modules/builder/BuilderLanding";
+import GeneratorLanding from "./modules/generator/GeneratorLanding";
+import RpgLanding from "./modules/rpg/RpgLanding";
+import MovieTrackerLanding from "./modules/movietracker/MovieTrackerLanding";
+import EpisodeRouletteLanding from "./modules/episoderoulette/EpisodeRouletteLanding";
+import CalendarLanding from "./modules/calendar/CalendarLanding";
 import RecipesLanding from "./modules/recipes/RecipesLanding";
 import NotepadLanding from "./modules/notepad/NotepadLanding";
 
@@ -18,6 +24,18 @@ import {
   CaretDown,
   CaretRight,
 } from "@phosphor-icons/react";
+
+// Pages
+type ViewKey =
+  | "home"
+  | "notepad"
+  | "recipes"
+  | "builder"
+  | "generator"
+  | "rpg"
+  | "movietracker"
+  | "episoderoulette"
+  | "calendar";
 
 type Theme = "light" | "dark";
 
@@ -44,8 +62,6 @@ export default function HomePage({ theme, toggleTheme }: HomePageProps) {
       [group]: !prev[group],
     }));
   };
-
-  type ViewKey = "home" | "notepad" | "recipes";
 
   const [view, setView] = useState<ViewKey>("home");
 
@@ -110,15 +126,27 @@ export default function HomePage({ theme, toggleTheme }: HomePageProps) {
 
           {openGroups.world && (
             <div className="ml-6 mt-1 flex flex-col gap-1">
-              <button className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-100 dark:hover:bg-zinc-900">
+              <button
+                type="button"
+                onClick={() => setView("builder")}
+                className={navItem(view === "builder")}
+              >
                 <TreeStructure size={16} />
                 Builder
               </button>
-              <button className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-100 dark:hover:bg-zinc-900">
+              <button
+                type="button"
+                onClick={() => setView("generator")}
+                className={navItem(view === "generator")}
+              >
                 <Sparkle size={16} />
                 Generator
               </button>
-              <button className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-100 dark:hover:bg-zinc-900">
+              <button
+                type="button"
+                onClick={() => setView("rpg")}
+                className={navItem(view === "rpg")}
+              >
                 <Sword size={16} />
                 RPG
               </button>
@@ -139,11 +167,19 @@ export default function HomePage({ theme, toggleTheme }: HomePageProps) {
 
           {openGroups.entertainment && (
             <div className="ml-6 mt-1 flex flex-col gap-1">
-              <button className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-100 dark:hover:bg-zinc-900">
+              <button
+                type="button"
+                onClick={() => setView("movietracker")}
+                className={navItem(view === "movietracker")}
+              >
                 <FilmSlate size={16} />
                 Movie Tracker
               </button>
-              <button className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-100 dark:hover:bg-zinc-900">
+              <button
+                type="button"
+                onClick={() => setView("episoderoulette")}
+                className={navItem(view === "episoderoulette")}
+              >
                 <DiceSix size={16} />
                 Episode Roulette
               </button>
@@ -164,7 +200,11 @@ export default function HomePage({ theme, toggleTheme }: HomePageProps) {
 
           {openGroups.utilities && (
             <div className="ml-6 mt-1 flex flex-col gap-1">
-              <button  className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-zinc-100 dark:hover:bg-zinc-900">
+              <button
+                type="button"
+                onClick={() => setView("calendar")}
+                className={navItem(view === "calendar")}
+              >
                 <Calendar size={16} />
                 Calendar
               </button>
@@ -193,9 +233,17 @@ export default function HomePage({ theme, toggleTheme }: HomePageProps) {
       {/* Main Content */}
       <main className="pt-12">
         <div className="ml-52 min-h-[calc(100vh-3rem)] p-4">
-          {view === "home" && <div className="p-4 text-sm text-zinc-500">Home (empty)</div>}
-          {view === "notepad" && <NotepadLanding />}
-          {view === "recipes" && <RecipesLanding />}
+        {view === "home" && <div />}
+
+        {view === "builder" && <BuilderLanding />}
+        {view === "generator" && <GeneratorLanding />}
+        {view === "rpg" && <RpgLanding />}
+        {view === "movietracker" && <MovieTrackerLanding />}
+        {view === "episoderoulette" && <EpisodeRouletteLanding />}
+        {view === "calendar" && <CalendarLanding  />}
+
+        {view === "notepad" && <NotepadLanding />}
+        {view === "recipes" && <RecipesLanding />}
         </div>
       </main>
     </div>
