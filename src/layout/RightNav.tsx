@@ -12,12 +12,12 @@ type ViewKey =
   | "notepad"
   | "recipes";
 
-type Props = {
-  view: ViewKey;
-  
-};
+  type Props = {
+    view: ViewKey;
+    onAction: (action: { type: "create" } | { type: "tool"; id: string }) => void;
+  };
 
-export default function RightNav({ view }: Props) {
+  export default function RightNav({ view, onAction }: Props) {
   const rn = getRightNavConfig(view);
 
   return (
@@ -37,6 +37,7 @@ export default function RightNav({ view }: Props) {
                 <button
                 type="button"
                 className={buttonClassName({ variant: "secondary", size: "full" })}
+                onClick={() => onAction({ type: "create" })}
                 >
                 {rn.createLabel}
                 </button>
@@ -56,10 +57,8 @@ export default function RightNav({ view }: Props) {
                         const toolId = e.target.value;
                         if (!toolId) return;
 
-                        // For now: just reset back to placeholder after selection.
-                        // Next step: wire tool actions per module.
                         e.currentTarget.value = "";
-                        console.log("tool selected:", toolId);
+                        onAction({ type: "tool", id: toolId });
                     }}
                     >
                     <option value="" disabled>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import type { Note } from "../../lib/db/notes";
 import { listNotes } from "../../lib/db/notes";
 import CreateNoteDialog from "./CreateNoteDialog";
@@ -6,7 +6,11 @@ import ViewNoteDialog from "./ViewNoteDialog";
 import EditNoteDialog from "./EditNoteDialog";
 import { buttonClassName } from "../../lib/ui/button";
 
-export default function NotepadLanding() {
+export type NotepadLandingHandle = {
+  openCreate: () => void;
+};
+
+const NotepadLanding = forwardRef<NotepadLandingHandle>(function NotepadLanding(_props, ref) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -16,6 +20,10 @@ export default function NotepadLanding() {
   const [viewOpen, setViewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    openCreate: () => setCreateOpen(true),
+  }));
 
   const refresh = async () => {
     try {
@@ -76,13 +84,6 @@ export default function NotepadLanding() {
     <div className="p-4">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-lg font-semibold">Notepad</h1>
-        <button
-          type="button"
-          className={buttonClassName({ variant: "secondary" })}
-          onClick={() => setCreateOpen(true)}
-        >
-          Create Note
-        </button>
       </div>
 
       {loading && <div className="text-sm text-zinc-500">Loading notes...</div>}
@@ -155,4 +156,5 @@ export default function NotepadLanding() {
         />
     </div>
   );
-}
+});
+export default NotepadLanding;

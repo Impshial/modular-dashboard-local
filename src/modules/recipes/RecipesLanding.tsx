@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import type { Recipe } from "../../lib/db/recipes";
 import { listRecipes } from "../../lib/db/recipes";
 import CreateRecipeDialog from "./CreateRecipeDialog";
 import ViewRecipeDialog from "./ViewRecipeDialog";
 import EditRecipeDialog from "./EditRecipeDialog";
 
-export default function RecipesLanding() {
+export type RecipesLandingHandle = {
+  openCreate: () => void;
+};
+
+const RecipesLanding = forwardRef<RecipesLandingHandle>(function RecipesLanding(_props, ref) {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -17,6 +21,10 @@ export default function RecipesLanding() {
 
   const [editOpen, setEditOpen] = useState(false);
   const [editRecipe, setEditRecipe] = useState<Recipe | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    openCreate: () => setCreateOpen(true),
+  }));
 
   const refresh = async () => {
     try {
@@ -52,13 +60,6 @@ export default function RecipesLanding() {
     <div className="p-4">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-lg font-semibold">Recipes</h1>
-        <button
-          type="button"
-          className="rounded-md border border-zinc-200 px-3 py-2 text-sm hover:bg-zinc-100 dark:border-zinc-800 dark:hover:bg-zinc-900"
-          onClick={() => setCreateOpen(true)}
-        >
-          Create Recipe
-        </button>
       </div>
 
       {loading && <div className="text-sm text-zinc-500">Loading recipes...</div>}
@@ -131,4 +132,5 @@ export default function RecipesLanding() {
       />
     </div>
   );
-}
+});
+export default RecipesLanding;

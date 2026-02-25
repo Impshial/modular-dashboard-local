@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { ArrowsLeftRightIcon } from "@phosphor-icons/react";
+import type { NotepadLandingHandle } from "./modules/notepad/NotepadLanding";
+import type { RecipesLandingHandle } from "./modules/recipes/RecipesLanding";
 import BuilderLanding from "./modules/builder/BuilderLanding";
 import GeneratorLanding from "./modules/generator/GeneratorLanding";
 import RpgLanding from "./modules/rpg/RpgLanding";
@@ -44,13 +47,16 @@ type HomePageProps = {
   theme: Theme;
   toggleTheme: () => void;
 };
+export default function HomePage({ theme, toggleTheme }: HomePageProps) {
+const notepadRef = useRef<NotepadLandingHandle>(null);
+const recipesRef = useRef<RecipesLandingHandle>(null);
 
 const navItem = (active: boolean) =>
   `flex items-center gap-2 rounded-md px-2 py-1 ${
     active ? "bg-zinc-100 dark:bg-zinc-900" : "hover:bg-zinc-100 dark:hover:bg-zinc-900"
   }`;
 
-export default function HomePage({ theme, toggleTheme }: HomePageProps) {
+  
   const [openGroups, setOpenGroups] = useState({
     world: true,
     entertainment: true,
@@ -65,7 +71,19 @@ export default function HomePage({ theme, toggleTheme }: HomePageProps) {
   };
 
   const [view, setView] = useState<ViewKey>("home");
+  const [rightNavOpen, setRightNavOpen] = useState(true);
   
+  const handleRightNavAction = (action: { type: "create" } | { type: "tool"; id: string }) => {
+    if (action.type === "create") {
+      if (view === "notepad") notepadRef.current?.openCreate();
+      if (view === "recipes") recipesRef.current?.openCreate();
+      return;
+    }
+  
+    // tool actions later
+    console.log("tool:", view, action.id);
+  };
+
   return (
     <div className="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
       {/* Fixed Header */}
@@ -78,13 +96,20 @@ export default function HomePage({ theme, toggleTheme }: HomePageProps) {
             <button
               type="button"
               onClick={toggleTheme}
-              className="inline-flex h-9 items-center justify-center rounded-md border border-zinc-200 px-3 text-sm hover:bg-zinc-100 dark:border-zinc-800 dark:hover:bg-zinc-900"
+              className="inline-flex h-9 items-center justify-center rounded-md border border-zinc-200 px-3 text-sm hover:bg-zinc-300 dark:border-zinc-800 dark:hover:bg-zinc-700"
               aria-label="Toggle theme"
               title="Toggle theme"
             >
               {theme === "dark" ? "Dark" : "Light"}
             </button>
-
+            <button
+              type="button"
+              onClick={() => setRightNavOpen((v) => !v)}
+              className="rounded-md p-2 text-zinc-500 hover:bg-zinc-300 dark:text-zinc-300 dark:hover:bg-zinc-700"
+              title={rightNavOpen ? "Collapse right panel" : "Expand right panel"}
+            >
+              <ArrowsLeftRightIcon size={18} />
+            </button>
             {/* User Menu Icon */}
             <button
               type="button"
@@ -100,9 +125,9 @@ export default function HomePage({ theme, toggleTheme }: HomePageProps) {
 
       {/* Body (Grid under the fixed header) */}
       <div className="pt-12">
-        <div className="grid h-[calc(100dvh-3rem)] grid-cols-[13rem_1fr_20rem]">
+      <div className="flex h-[calc(100dvh-3rem)] overflow-hidden">
           {/* Left Sidebar */}
-          <aside className="border-r border-zinc-400 bg-white dark:border-zinc-500 dark:bg-zinc-950">
+          <aside className="w-[13rem] shrink-0 border-r border-zinc-400 bg-white dark:border-zinc-500 dark:bg-zinc-950">
             <nav className="flex h-full flex-col p-2 text-sm">
               {/* Home */}
               <button
@@ -236,7 +261,7 @@ export default function HomePage({ theme, toggleTheme }: HomePageProps) {
           </aside>
 
           {/* Center Content */}
-          <main className="min-w-0 overflow-auto p-4">
+          <main className="min-w-0 flex-1 overflow-auto p-4">
             {view === "home" && <div />}
 
             {view === "builder" && <BuilderLanding />}
@@ -246,12 +271,22 @@ export default function HomePage({ theme, toggleTheme }: HomePageProps) {
             {view === "episoderoulette" && <EpisodeRouletteLanding />}
             {view === "calendar" && <CalendarLanding />}
 
-            {view === "notepad" && <NotepadLanding />}
-            {view === "recipes" && <RecipesLanding />}
+            {view === "notepad" && <NotepadLanding ref={notepadRef} />}
+            {view === "recipes" && <RecipesLanding ref={recipesRef} />}
           </main>
 
-          {/* Right Nav */}
-          <RightNav view={view} />
+          {/* Right Nav (animated) */}
+            <div
+              className="shrink-0 overflow-hidden transition-[width] duration-200 ease-out"
+              style={{
+                width: rightNavOpen ? "20rem" : "0px",
+                pointerEvents: rightNavOpen ? "auto" : "none",
+              }}
+            >
+              <div className="h-full w-[20rem] border-l border-zinc-400 bg-white dark:border-zinc-500 dark:bg-zinc-950">
+                <RightNav view={view} onAction={handleRightNavAction} />
+              </div>
+            </div>
         </div>
       </div>
     </div>
