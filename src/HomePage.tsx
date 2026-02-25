@@ -7,8 +7,6 @@ import EpisodeRouletteLanding from "./modules/episoderoulette/EpisodeRouletteLan
 import CalendarLanding from "./modules/calendar/CalendarLanding";
 import RecipesLanding from "./modules/recipes/RecipesLanding";
 import NotepadLanding from "./modules/notepad/NotepadLanding";
-import { buttonClassName } from "./lib/ui/button";
-import { getRightNavConfig } from "./layout/rightNavRegistry";
 import RightNav from "./layout/RightNav";
 
 import {
@@ -52,31 +50,6 @@ const navItem = (active: boolean) =>
     active ? "bg-zinc-100 dark:bg-zinc-900" : "hover:bg-zinc-100 dark:hover:bg-zinc-900"
   }`;
 
-  const viewLabel = (view: ViewKey) => {
-    switch (view) {
-      case "home":
-        return "Home";
-      case "builder":
-        return "Builder";
-      case "generator":
-        return "Generator";
-      case "rpg":
-        return "RPG";
-      case "movietracker":
-        return "Movie Tracker";
-      case "episoderoulette":
-        return "Episode Roulette";
-      case "calendar":
-        return "Calendar";
-      case "notepad":
-        return "Notepad";
-      case "recipes":
-        return "Recipes";
-      default:
-        return "Module";
-    }
-  };
-
 export default function HomePage({ theme, toggleTheme }: HomePageProps) {
   const [openGroups, setOpenGroups] = useState({
     world: true,
@@ -92,8 +65,7 @@ export default function HomePage({ theme, toggleTheme }: HomePageProps) {
   };
 
   const [view, setView] = useState<ViewKey>("home");
-  const rn = getRightNavConfig(view);
-
+  
   return (
     <div className="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
       {/* Fixed Header */}
