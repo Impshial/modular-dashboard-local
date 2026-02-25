@@ -4,7 +4,6 @@ import { listNotes } from "../../lib/db/notes";
 import CreateNoteDialog from "./CreateNoteDialog";
 import ViewNoteDialog from "./ViewNoteDialog";
 import EditNoteDialog from "./EditNoteDialog";
-import { buttonClassName } from "../../lib/ui/button";
 
 export type NotepadLandingHandle = {
   openCreate: () => void;
