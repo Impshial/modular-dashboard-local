@@ -1,5 +1,5 @@
 export type ButtonVariant = "default" | "secondary" | "outline" | "ghost" | "danger" | "success";
-export type ButtonSize = "sm" | "md";
+export type ButtonSize = "sm" | "md" | "full";
 
 const base =
   "inline-flex items-center justify-center rounded-md text-sm font-medium " +
@@ -23,6 +23,7 @@ const variants: Record<ButtonVariant, string> = {
 const sizes: Record<ButtonSize, string> = {
   sm: "h-9 px-3",
   md: "h-10 px-4",
+  full: "h-10 w-full",
 };
 
 export function buttonClassName(opts?: {
