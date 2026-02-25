@@ -79,11 +79,12 @@ export default function RecipesLanding() {
             <button
               key={r.id}
               type="button"
-              className="cursor-pointer text-left flex flex-col h-[220px] rounded-lg border border-zinc-800 bg-zinc-900 shadow-sm hover:bg-zinc-800/80 focus:outline-none focus:ring-2 focus:ring-zinc-400/40"
+              className="cursor-pointer text-left flex flex-col h-[220px] rounded-lg border border-zinc-800 text-zinc-800 shadow-sm hover:bg-zinc-200/80 dark:hover:bg-zinc-800/80 focus:outline-none focus:ring-2 focus:ring-zinc-400/40"
               onClick={() => openView(r)}
             >
+              {/* Title */}
               <div className="px-4 py-3">
-                <div className="truncate text-sm font-semibold text-zinc-50">
+                <div className="truncate text-sm font-semibold text-zinc-800 dark:text-zinc-50">
                   {r.title?.trim() ? r.title : "Untitled"}
                 </div>
               </div>
@@ -94,7 +95,7 @@ export default function RecipesLanding() {
               {/* Body fills remaining space */}
               <div className="flex flex-1 flex-col px-4 py-3 min-h-0">
                 {/* Content */}
-                <div className="line-clamp-5 text-sm leading-5 text-zinc-100">
+                <div className="line-clamp-5 text-sm leading-5 text-zinc-800 dark:text-zinc-50">
                   {r.description?.trim() ? r.description : "No description"}
                     
                 </div>
